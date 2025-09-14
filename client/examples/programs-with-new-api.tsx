@@ -329,7 +329,6 @@ export async function exampleApiUsage() {
       status: "active",
       completionRate: 0,
       rating: 0,
-      curriculum: ["Module 1", "Module 2"],
     });
     console.log("Created program:", newProgram.data);
 

@@ -46,7 +46,7 @@ export function useUpdateProfile() {
       onMutate: async (newUserData) => {
         // Optimistic update
         updateCache(queryKeys.user.profile(), (old) => ({
-          ...old,
+          ...(old || {}),
           ...newUserData,
         }));
       },
@@ -77,7 +77,7 @@ export function useUpdatePreferences() {
     {
       onMutate: async (newPreferences) => {
         updateCache(queryKeys.user.preferences(), (old) => ({
-          ...old,
+          ...(old || {}),
           ...newPreferences,
         }));
       },

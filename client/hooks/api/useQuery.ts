@@ -3,12 +3,15 @@
  * Modern data fetching with caching, background updates, and optimistic updates
  */
 
+import React from "react";
 import {
   useQuery,
   useMutation,
   useQueryClient,
+  useInfiniteQuery,
   UseQueryOptions,
   UseMutationOptions,
+  UseInfiniteQueryOptions,
 } from "@tanstack/react-query";
 import { ApiResponse } from "../../../shared/types";
 import { ApiError } from "../../lib/api-client";
@@ -187,7 +190,7 @@ export function usePagination<T>(
     [...queryKey, page, limit],
     () => queryFn(page, limit),
     {
-      keepPreviousData: true,
+      placeholderData: (previousData) => previousData,
     },
   );
 

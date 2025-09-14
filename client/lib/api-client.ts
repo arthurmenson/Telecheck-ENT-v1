@@ -30,6 +30,7 @@ export interface ApiError extends Error {
   status?: number;
   code?: string;
   details?: any;
+  response?: Response;
 }
 
 // Centralized API Client Class
@@ -69,9 +70,7 @@ export class ApiClient {
           Authorization: `Bearer ${token}`,
         };
       } else if (!token && !config.skipAuth) {
-        console.warn(
-          `[ApiClient] No auth token available for request to ${config.url}`,
-        );
+        console.warn(`[ApiClient] No auth token available for request`);
       }
       return config;
     });
@@ -182,7 +181,11 @@ export class ApiClient {
     } = config;
 
     // Apply request interceptors
-    let finalConfig = { ...requestConfig, skipAuth, skipErrorHandling };
+    let finalConfig = {
+      ...requestConfig,
+      skipAuth: skipAuth ?? false,
+      skipErrorHandling: skipErrorHandling ?? false,
+    };
     for (const interceptor of this.interceptors.request) {
       finalConfig = await interceptor(finalConfig);
     }
