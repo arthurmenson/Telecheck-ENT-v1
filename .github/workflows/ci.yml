@@ -17,11 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
       - run: npm ci
       # Validate OpenAPI/GraphQL contracts if present
       - name: Validate OpenAPI
         run: |
           if [ -f schema/openapi.yaml ]; then
+            npm install -g @apidevtools/swagger-cli
             npx @apidevtools/swagger-cli validate schema/openapi.yaml
           else
             echo "No OpenAPI found; skip"
@@ -31,6 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
       - run: npm ci
       - name: Prisma migrate diff (if Prisma exists)
         run: |
@@ -44,9 +49,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
       - run: npm ci
-      - name: Storybook build (if configured)
-        run: npm run build:storybook --if-present
+      - name: Build client (if configured)
+        run: npm run build:client --if-present
       - name: Chromatic (if token provided)
         run: |
           if [ -n "${{ secrets.CHROMATIC_PROJECT_TOKEN }}" ]; then

@@ -24,6 +24,7 @@
     "test:integration": "vitest --run tests/integration/",
     "test:phase1": "vitest --run tests/phase1/",
     "format.fix": "prettier --write .",
+    "lint": "prettier --check .",
     "typecheck": "tsc",
     "prepare": "husky install"
   },
@@ -117,6 +118,7 @@
     "input-otp": "^1.2.4",
     "lint-staged": "^16.1.6",
     "lucide-react": "^0.462.0",
+    "msw": "^2.11.2",
     "next-themes": "^0.3.0",
     "postcss": "^8.5.6",
     "prettier": "^3.5.3",
