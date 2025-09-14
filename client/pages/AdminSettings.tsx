@@ -1,27 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
-import { 
-  Settings, 
-  Shield, 
-  Bell, 
-  Database, 
-  Users, 
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import {
+  Settings,
+  Shield,
+  Bell,
+  Database,
+  Users,
   Activity,
   Save,
   RefreshCw,
   AlertTriangle,
   CheckCircle,
-  Info
-} from 'lucide-react';
+  Info,
+} from "lucide-react";
 
 interface AdminSettings {
   // System Settings
@@ -30,7 +36,7 @@ interface AdminSettings {
   maintenanceMode: boolean;
   debugMode: boolean;
   logLevel: string;
-  
+
   // Security Settings
   sessionTimeout: number;
   maxLoginAttempts: number;
@@ -43,30 +49,30 @@ interface AdminSettings {
   };
   twoFactorAuth: boolean;
   ipWhitelist: string[];
-  
+
   // Notification Settings
   emailNotifications: boolean;
   smsNotifications: boolean;
   pushNotifications: boolean;
   notificationFrequency: string;
-  
+
   // Data Management
   dataRetentionDays: number;
   backupFrequency: string;
   autoBackup: boolean;
   encryptionEnabled: boolean;
-  
+
   // User Management
   allowSelfRegistration: boolean;
   requireEmailVerification: boolean;
   defaultUserRole: string;
   maxUsersPerOrganization: number;
-  
+
   // API Settings
   apiRateLimit: number;
   apiTimeout: number;
   corsOrigins: string[];
-  
+
   // AI/ML Settings
   aiEnabled: boolean;
   aiAuditLogging: boolean;
@@ -147,8 +153,10 @@ export default function AdminSettings() {
   const [settings, setSettings] = useState<AdminSettings>(defaultSettings);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [activeTab, setActiveTab] = useState('system');
+  const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">(
+    "idle",
+  );
+  const [activeTab, setActiveTab] = useState("system");
 
   useEffect(() => {
     loadSettings();
@@ -158,11 +166,11 @@ export default function AdminSettings() {
     setIsLoading(true);
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       // In real implementation, fetch from API
       setSettings(defaultSettings);
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      console.error("Failed to load settings:", error);
     } finally {
       setIsLoading(false);
     }
@@ -170,21 +178,21 @@ export default function AdminSettings() {
 
   const saveSettings = async () => {
     setIsSaving(true);
-    setSaveStatus('idle');
-    
+    setSaveStatus("idle");
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // In real implementation, save to API
-      console.log('Saving settings:', settings);
-      
-      setSaveStatus('success');
-      setTimeout(() => setSaveStatus('idle'), 3000);
+      console.log("Saving settings:", settings);
+
+      setSaveStatus("success");
+      setTimeout(() => setSaveStatus("idle"), 3000);
     } catch (error) {
-      console.error('Failed to save settings:', error);
-      setSaveStatus('error');
-      setTimeout(() => setSaveStatus('idle'), 3000);
+      console.error("Failed to save settings:", error);
+      setSaveStatus("error");
+      setTimeout(() => setSaveStatus("idle"), 3000);
     } finally {
       setIsSaving(false);
     }
@@ -192,25 +200,25 @@ export default function AdminSettings() {
 
   const updateSetting = <K extends keyof AdminSettings>(
     key: K,
-    value: AdminSettings[K]
+    value: AdminSettings[K],
   ) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   };
 
   const updateNestedSetting = <K extends keyof AdminSettings>(
     key: K,
     nestedKey: string,
-    value: any
+    value: any,
   ) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
       [key]: {
         ...(prev[key] as any),
-        [nestedKey]: value
-      }
+        [nestedKey]: value,
+      },
     }));
   };
 
@@ -233,13 +241,13 @@ export default function AdminSettings() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          {saveStatus === 'success' && (
+          {saveStatus === "success" && (
             <Badge variant="default" className="bg-green-500">
               <CheckCircle className="h-3 w-3 mr-1" />
               Saved
             </Badge>
           )}
-          {saveStatus === 'error' && (
+          {saveStatus === "error" && (
             <Badge variant="destructive">
               <AlertTriangle className="h-3 w-3 mr-1" />
               Error
@@ -261,7 +269,11 @@ export default function AdminSettings() {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-4"
+      >
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="system" className="flex items-center space-x-2">
             <Settings className="h-4 w-4" />
@@ -271,7 +283,10 @@ export default function AdminSettings() {
             <Shield className="h-4 w-4" />
             <span>Security</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex items-center space-x-2">
+          <TabsTrigger
+            value="notifications"
+            className="flex items-center space-x-2"
+          >
             <Bell className="h-4 w-4" />
             <span>Notifications</span>
           </TabsTrigger>
@@ -283,7 +298,10 @@ export default function AdminSettings() {
             <Users className="h-4 w-4" />
             <span>Users</span>
           </TabsTrigger>
-          <TabsTrigger value="messaging" className="flex items-center space-x-2">
+          <TabsTrigger
+            value="messaging"
+            className="flex items-center space-x-2"
+          >
             <Activity className="h-4 w-4" />
             <span>Messaging</span>
           </TabsTrigger>
@@ -301,7 +319,9 @@ export default function AdminSettings() {
                   <Input
                     id="systemName"
                     value={settings.systemName}
-                    onChange={(e) => updateSetting('systemName', e.target.value)}
+                    onChange={(e) =>
+                      updateSetting("systemName", e.target.value)
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -309,12 +329,14 @@ export default function AdminSettings() {
                   <Input
                     id="systemVersion"
                     value={settings.systemVersion}
-                    onChange={(e) => updateSetting('systemVersion', e.target.value)}
+                    onChange={(e) =>
+                      updateSetting("systemVersion", e.target.value)
+                    }
                     disabled
                   />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
@@ -325,7 +347,9 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.maintenanceMode}
-                    onCheckedChange={(checked) => updateSetting('maintenanceMode', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("maintenanceMode", checked)
+                    }
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -337,7 +361,9 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.debugMode}
-                    onCheckedChange={(checked) => updateSetting('debugMode', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("debugMode", checked)
+                    }
                   />
                 </div>
               </div>
@@ -346,7 +372,7 @@ export default function AdminSettings() {
                 <Label htmlFor="logLevel">Log Level</Label>
                 <Select
                   value={settings.logLevel}
-                  onValueChange={(value) => updateSetting('logLevel', value)}
+                  onValueChange={(value) => updateSetting("logLevel", value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -371,12 +397,16 @@ export default function AdminSettings() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="sessionTimeout">Session Timeout (minutes)</Label>
+                  <Label htmlFor="sessionTimeout">
+                    Session Timeout (minutes)
+                  </Label>
                   <Input
                     id="sessionTimeout"
                     type="number"
                     value={settings.sessionTimeout}
-                    onChange={(e) => updateSetting('sessionTimeout', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      updateSetting("sessionTimeout", parseInt(e.target.value))
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -385,7 +415,12 @@ export default function AdminSettings() {
                     id="maxLoginAttempts"
                     type="number"
                     value={settings.maxLoginAttempts}
-                    onChange={(e) => updateSetting('maxLoginAttempts', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      updateSetting(
+                        "maxLoginAttempts",
+                        parseInt(e.target.value),
+                      )
+                    }
                   />
                 </div>
               </div>
@@ -401,7 +436,13 @@ export default function AdminSettings() {
                       id="minLength"
                       type="number"
                       value={settings.passwordPolicy.minLength}
-                      onChange={(e) => updateNestedSetting('passwordPolicy', 'minLength', parseInt(e.target.value))}
+                      onChange={(e) =>
+                        updateNestedSetting(
+                          "passwordPolicy",
+                          "minLength",
+                          parseInt(e.target.value),
+                        )
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -410,7 +451,13 @@ export default function AdminSettings() {
                     </div>
                     <Switch
                       checked={settings.passwordPolicy.requireUppercase}
-                      onCheckedChange={(checked) => updateNestedSetting('passwordPolicy', 'requireUppercase', checked)}
+                      onCheckedChange={(checked) =>
+                        updateNestedSetting(
+                          "passwordPolicy",
+                          "requireUppercase",
+                          checked,
+                        )
+                      }
                     />
                   </div>
                 </div>
@@ -421,7 +468,13 @@ export default function AdminSettings() {
                     </div>
                     <Switch
                       checked={settings.passwordPolicy.requireLowercase}
-                      onCheckedChange={(checked) => updateNestedSetting('passwordPolicy', 'requireLowercase', checked)}
+                      onCheckedChange={(checked) =>
+                        updateNestedSetting(
+                          "passwordPolicy",
+                          "requireLowercase",
+                          checked,
+                        )
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -430,7 +483,13 @@ export default function AdminSettings() {
                     </div>
                     <Switch
                       checked={settings.passwordPolicy.requireNumbers}
-                      onCheckedChange={(checked) => updateNestedSetting('passwordPolicy', 'requireNumbers', checked)}
+                      onCheckedChange={(checked) =>
+                        updateNestedSetting(
+                          "passwordPolicy",
+                          "requireNumbers",
+                          checked,
+                        )
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -439,7 +498,13 @@ export default function AdminSettings() {
                     </div>
                     <Switch
                       checked={settings.passwordPolicy.requireSpecialChars}
-                      onCheckedChange={(checked) => updateNestedSetting('passwordPolicy', 'requireSpecialChars', checked)}
+                      onCheckedChange={(checked) =>
+                        updateNestedSetting(
+                          "passwordPolicy",
+                          "requireSpecialChars",
+                          checked,
+                        )
+                      }
                     />
                   </div>
                 </div>
@@ -456,7 +521,9 @@ export default function AdminSettings() {
                 </div>
                 <Switch
                   checked={settings.twoFactorAuth}
-                  onCheckedChange={(checked) => updateSetting('twoFactorAuth', checked)}
+                  onCheckedChange={(checked) =>
+                    updateSetting("twoFactorAuth", checked)
+                  }
                 />
               </div>
             </CardContent>
@@ -479,7 +546,9 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.emailNotifications}
-                    onCheckedChange={(checked) => updateSetting('emailNotifications', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("emailNotifications", checked)
+                    }
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -491,7 +560,9 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.smsNotifications}
-                    onCheckedChange={(checked) => updateSetting('smsNotifications', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("smsNotifications", checked)
+                    }
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -503,16 +574,22 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.pushNotifications}
-                    onCheckedChange={(checked) => updateSetting('pushNotifications', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("pushNotifications", checked)
+                    }
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="notificationFrequency">Notification Frequency</Label>
+                <Label htmlFor="notificationFrequency">
+                  Notification Frequency
+                </Label>
                 <Select
                   value={settings.notificationFrequency}
-                  onValueChange={(value) => updateSetting('notificationFrequency', value)}
+                  onValueChange={(value) =>
+                    updateSetting("notificationFrequency", value)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -537,19 +614,28 @@ export default function AdminSettings() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="dataRetentionDays">Data Retention (days)</Label>
+                  <Label htmlFor="dataRetentionDays">
+                    Data Retention (days)
+                  </Label>
                   <Input
                     id="dataRetentionDays"
                     type="number"
                     value={settings.dataRetentionDays}
-                    onChange={(e) => updateSetting('dataRetentionDays', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      updateSetting(
+                        "dataRetentionDays",
+                        parseInt(e.target.value),
+                      )
+                    }
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="backupFrequency">Backup Frequency</Label>
                   <Select
                     value={settings.backupFrequency}
-                    onValueChange={(value) => updateSetting('backupFrequency', value)}
+                    onValueChange={(value) =>
+                      updateSetting("backupFrequency", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -574,7 +660,9 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.autoBackup}
-                    onCheckedChange={(checked) => updateSetting('autoBackup', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("autoBackup", checked)
+                    }
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -586,7 +674,9 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.encryptionEnabled}
-                    onCheckedChange={(checked) => updateSetting('encryptionEnabled', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("encryptionEnabled", checked)
+                    }
                   />
                 </div>
               </div>
@@ -610,7 +700,9 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.allowSelfRegistration}
-                    onCheckedChange={(checked) => updateSetting('allowSelfRegistration', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("allowSelfRegistration", checked)
+                    }
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -622,7 +714,9 @@ export default function AdminSettings() {
                   </div>
                   <Switch
                     checked={settings.requireEmailVerification}
-                    onCheckedChange={(checked) => updateSetting('requireEmailVerification', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("requireEmailVerification", checked)
+                    }
                   />
                 </div>
               </div>
@@ -632,7 +726,9 @@ export default function AdminSettings() {
                   <Label htmlFor="defaultUserRole">Default User Role</Label>
                   <Select
                     value={settings.defaultUserRole}
-                    onValueChange={(value) => updateSetting('defaultUserRole', value)}
+                    onValueChange={(value) =>
+                      updateSetting("defaultUserRole", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -645,12 +741,19 @@ export default function AdminSettings() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="maxUsersPerOrganization">Max Users per Organization</Label>
+                  <Label htmlFor="maxUsersPerOrganization">
+                    Max Users per Organization
+                  </Label>
                   <Input
                     id="maxUsersPerOrganization"
                     type="number"
                     value={settings.maxUsersPerOrganization}
-                    onChange={(e) => updateSetting('maxUsersPerOrganization', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      updateSetting(
+                        "maxUsersPerOrganization",
+                        parseInt(e.target.value),
+                      )
+                    }
                   />
                 </div>
               </div>
@@ -672,10 +775,14 @@ export default function AdminSettings() {
               </Alert>
 
               <div className="space-y-2">
-                <Label htmlFor="primaryMessagingProvider">Primary Messaging Provider</Label>
+                <Label htmlFor="primaryMessagingProvider">
+                  Primary Messaging Provider
+                </Label>
                 <Select
                   value={settings.primaryMessagingProvider}
-                  onValueChange={(value) => updateSetting('primaryMessagingProvider', value)}
+                  onValueChange={(value) =>
+                    updateSetting("primaryMessagingProvider", value)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -697,7 +804,9 @@ export default function AdminSettings() {
                     id="telnyxApiKey"
                     type="password"
                     value={settings.telnyxApiKey}
-                    onChange={(e) => updateSetting('telnyxApiKey', e.target.value)}
+                    onChange={(e) =>
+                      updateSetting("telnyxApiKey", e.target.value)
+                    }
                     placeholder="Enter your Telnyx API key"
                   />
                 </div>
@@ -706,7 +815,9 @@ export default function AdminSettings() {
                   <Input
                     id="telnyxPhoneNumber"
                     value={settings.telnyxPhoneNumber}
-                    onChange={(e) => updateSetting('telnyxPhoneNumber', e.target.value)}
+                    onChange={(e) =>
+                      updateSetting("telnyxPhoneNumber", e.target.value)
+                    }
                     placeholder="+1234567890"
                   />
                 </div>
@@ -722,7 +833,9 @@ export default function AdminSettings() {
                     <Input
                       id="twilioAccountSid"
                       value={settings.twilioAccountSid}
-                      onChange={(e) => updateSetting('twilioAccountSid', e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("twilioAccountSid", e.target.value)
+                      }
                       placeholder="Enter your Twilio Account SID"
                     />
                   </div>
@@ -732,7 +845,9 @@ export default function AdminSettings() {
                       id="twilioAuthToken"
                       type="password"
                       value={settings.twilioAuthToken}
-                      onChange={(e) => updateSetting('twilioAuthToken', e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("twilioAuthToken", e.target.value)
+                      }
                       placeholder="Enter your Twilio Auth Token"
                     />
                   </div>
@@ -742,7 +857,9 @@ export default function AdminSettings() {
                   <Input
                     id="twilioPhoneNumber"
                     value={settings.twilioPhoneNumber}
-                    onChange={(e) => updateSetting('twilioPhoneNumber', e.target.value)}
+                    onChange={(e) =>
+                      updateSetting("twilioPhoneNumber", e.target.value)
+                    }
                     placeholder="+1234567890"
                   />
                 </div>

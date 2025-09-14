@@ -7,10 +7,12 @@ import { createServer } from "./server";
 export default defineConfig(({ mode }) => ({
   // Ensure environment variables are properly defined
   define: {
-    'import.meta.env.VITE_WS_URL': JSON.stringify(process.env.VITE_WS_URL || 'ws://localhost:8080'),
-    'import.meta.env.MODE': JSON.stringify(mode),
-    'import.meta.env.DEV': mode === 'development',
-    'import.meta.env.PROD': mode === 'production'
+    "import.meta.env.VITE_WS_URL": JSON.stringify(
+      process.env.VITE_WS_URL || "ws://localhost:8080",
+    ),
+    "import.meta.env.MODE": JSON.stringify(mode),
+    "import.meta.env.DEV": mode === "development",
+    "import.meta.env.PROD": mode === "production",
   },
   server: {
     host: "::",
@@ -25,7 +27,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(), // Using standard React plugin instead of SWC
-    expressPlugin()
+    expressPlugin(),
   ],
   resolve: {
     alias: {
@@ -44,22 +46,24 @@ function expressPlugin(): Plugin {
       let expressApp: any = null;
 
       // Initialize the Express app asynchronously
-      createServer().then(app => {
-        expressApp = app;
-        console.log('✅ Express server initialized and ready');
-      }).catch(error => {
-        console.error('❌ Failed to initialize Express server:', error);
-      });
+      createServer()
+        .then((app) => {
+          expressApp = app;
+          console.log("✅ Express server initialized and ready");
+        })
+        .catch((error) => {
+          console.error("❌ Failed to initialize Express server:", error);
+        });
 
       // Add Express app as middleware to Vite dev server
-      server.middlewares.use('/api', (req, res, next) => {
+      server.middlewares.use("/api", (req, res, next) => {
         if (expressApp) {
           expressApp(req, res, next);
         } else {
           // If Express app isn't ready yet, return a temporary response
           res.status(503).json({
-            error: 'Server is still initializing, please try again in a moment',
-            code: 'SERVER_INITIALIZING'
+            error: "Server is still initializing, please try again in a moment",
+            code: "SERVER_INITIALIZING",
           });
         }
       });
@@ -67,7 +71,7 @@ function expressPlugin(): Plugin {
       // Also handle non-API requests that should go to Express
       server.middlewares.use((req, res, next) => {
         // Only handle requests that are not for static assets
-        if (req.url?.startsWith('/api') && expressApp) {
+        if (req.url?.startsWith("/api") && expressApp) {
           expressApp(req, res, next);
         } else {
           next();
