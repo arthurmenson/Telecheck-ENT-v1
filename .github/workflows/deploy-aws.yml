@@ -1,0 +1,80 @@
+name: deploy-aws
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        options: [staging, prod]
+        description: "Environment to deploy to"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # Assume AWS role via OIDC (create it once in IAM)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsDeployer
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Build containers → push to GHCR (cloud-neutral)
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push API image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/api:${{ github.sha }} -f Dockerfile .
+          docker push ghcr.io/${{ github.repository }}/api:${{ github.sha }}
+
+      - name: Build & push client image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/client:${{ github.sha }} -f Dockerfile.client .
+          docker push ghcr.io/${{ github.repository }}/client:${{ github.sha }}
+
+      # Terraform/Helm (portable) — leave modules in infra/
+      - name: Terraform init/plan/apply
+        working-directory: infra/providers/aws
+        run: |
+          terraform init -input=false
+          terraform plan -var="environment=${{ inputs.environment }}" -var="image_tag=${{ github.sha }}"
+          terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}" -var="image_tag=${{ github.sha }}"
+
+      - name: Helm upgrade
+        working-directory: infra/helm/app-chart
+        run: |
+          helm upgrade --install telecheck-emr . \
+            -n ${{ inputs.environment }} \
+            --set image.tag=${{ github.sha }} \
+            --set environment=${{ inputs.environment }} \
+            --create-namespace
+
+      - name: Run health checks
+        run: |
+          # Wait for deployment to be ready
+          kubectl wait --for=condition=available --timeout=300s deployment/telecheck-emr -n ${{ inputs.environment }}
+
+          # Run basic health check
+          kubectl get pods -n ${{ inputs.environment }}
+
+          # Test API endpoint
+          API_URL=$(kubectl get service telecheck-emr-api -n ${{ inputs.environment }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          curl -f "http://$API_URL/health" || exit 1
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment to ${{ inputs.environment }} successful!"
+          else
+            echo "❌ Deployment to ${{ inputs.environment }} failed!"
+          fi

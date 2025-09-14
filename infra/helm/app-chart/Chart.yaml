@@ -1,0 +1,16 @@
+apiVersion: v2
+name: telecheck-emr
+description: A Helm chart for Telecheck EMR application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - healthcare
+  - emr
+  - telemedicine
+home: https://github.com/arthurmenson/telecheck-ent-v1
+sources:
+  - https://github.com/arthurmenson/telecheck-ent-v1
+maintainers:
+  - name: Telecheck Team
+    email: info@cardinalfive.com

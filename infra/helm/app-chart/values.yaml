@@ -1,0 +1,97 @@
+# Default values for telecheck-emr
+replicaCount: 2
+
+image:
+  repository: ghcr.io/arthurmenson/telecheck-ent-v1/api
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: telecheck-emr.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: telecheck-emr-tls
+      hosts:
+        - telecheck-emr.example.com
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Environment variables
+env:
+  NODE_ENV: production
+  PORT: "3000"
+
+# Database configuration
+database:
+  host: "postgres-service"
+  port: 5432
+  name: "telecheck_emr"
+  username: "postgres"
+  password: "changeme"
+
+# Redis configuration
+redis:
+  host: "redis-service"
+  port: 6379
+  password: ""
+
+# Health check configuration
+healthCheck:
+  enabled: true
+  path: "/health"
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Monitoring
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    path: /metrics
+
+# Security
+security:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault

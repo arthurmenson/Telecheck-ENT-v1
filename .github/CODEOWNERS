@@ -1,0 +1,14 @@
+# UI owned by design/Builder (read-only to engineers)
+client/components/**   @design-team
+client/contexts/**      @design-team
+client/hooks/**         @design-team
+client/global.css       @design-team
+.builder/**             @design-team
+components.json         @design-team
+packages/ui-lib/**      @design-team
+packages/tokens/**      @design-team
+
+# Backend & contracts owned by engineering leads
+schema/**               @backend-leads
+infra/**                @backend-leads
+server/**               @backend-leads

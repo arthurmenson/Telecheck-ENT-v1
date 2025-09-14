@@ -1,0 +1,18 @@
+name: guard-ui
+on: [pull_request]
+jobs:
+  block-ui-edits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail if UI-owned files changed
+        run: |
+          base="origin/${{ github.base_ref }}"
+          git fetch --depth=1 origin ${{ github.base_ref }} || true
+          changed=$(git diff --name-only "$base"... |
+            grep -E '^client/components/|^client/contexts/|^client/hooks/|^\.builder/|^components\.json|^packages/ui-lib/|^packages/tokens/' || true)
+          if [ -n "$changed" ]; then
+            echo "::error::UI-owned files changed:"
+            echo "$changed"
+            exit 1
+          fi
