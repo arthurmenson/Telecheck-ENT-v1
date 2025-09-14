@@ -30,6 +30,15 @@ import {
   useProgramParticipants,
   useEnrollParticipant,
 } from "../hooks/api";
+import {
+  HeartPulse,
+  Plus,
+  Search,
+  Star,
+  Target,
+  Edit,
+  UserPlus,
+} from "lucide-react";
 
 // 🚀 NEW: Import type-safe services
 import { ProgramService } from "../services/api.service";
@@ -66,6 +75,16 @@ export function ModernProgramsComponent() {
       // ✅ Cache automatically updates, no manual refetch needed!
     } catch (error) {
       console.error("Failed to create program:", error);
+      // ✅ Error handling built-in
+    }
+  };
+
+  const handleEditProgram = async (program: any) => {
+    try {
+      await updateProgram.mutateAsync({ id: program.id, program });
+      // ✅ Cache automatically updates, no manual refetch needed!
+    } catch (error) {
+      console.error("Failed to update program:", error);
       // ✅ Error handling built-in
     }
   };
@@ -310,7 +329,6 @@ export async function exampleApiUsage() {
       status: "active",
       completionRate: 0,
       rating: 0,
-      modules: 5,
       objectives: ["Improve health", "Build habits"],
       curriculum: ["Module 1", "Module 2"],
     });

@@ -1086,7 +1086,7 @@ export function RPMDeviceIntegration() {
   );
 }
 
-function Label({
+function CustomLabel({
   children,
   className,
   htmlFor,

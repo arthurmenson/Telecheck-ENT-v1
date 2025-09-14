@@ -1275,7 +1275,7 @@ export function RPMAlertSystem() {
   );
 }
 
-function Label({
+function CustomLabel({
   children,
   className,
   htmlFor,

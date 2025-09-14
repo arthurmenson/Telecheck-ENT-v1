@@ -999,7 +999,7 @@ export function CCMWorkflow() {
   );
 }
 
-function Label({
+function CustomLabel({
   children,
   className,
   htmlFor,

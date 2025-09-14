@@ -276,8 +276,8 @@ export function DiabetesWoundManagement() {
 
   const getRiskBadge = (score: number) => {
     if (score >= 80) return { color: "destructive", text: "High Risk" };
-    if (score >= 60) return { color: "warning", text: "Moderate Risk" };
-    return { color: "success", text: "Low Risk" };
+    if (score >= 60) return { color: "secondary", text: "Moderate Risk" };
+    return { color: "default", text: "Low Risk" };
   };
 
   const getHealingTrend = (assessment: WoundAssessment) => {
@@ -700,7 +700,7 @@ export function DiabetesWoundManagement() {
                                 : wound.healingProgress === "deteriorating"
                                   ? "destructive"
                                   : wound.healingProgress === "healed"
-                                    ? "success"
+                                    ? "default"
                                     : "secondary"
                             }
                           >
@@ -1191,7 +1191,7 @@ export function DiabetesWoundManagement() {
   );
 }
 
-function Label({
+function CustomLabel({
   children,
   className,
   htmlFor,

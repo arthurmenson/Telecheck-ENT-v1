@@ -348,6 +348,21 @@ export function useUpdateProgram() {
   );
 }
 
+export function useDeleteProgram() {
+  const { updateCache, invalidateQueries } = useOptimisticUpdate();
+
+  return useApiMutation((id: string) => ProgramService.deleteProgram(id), {
+    onMutate: async (id) => {
+      updateCache(queryKeys.programs.list(), (old: Program[] = []) =>
+        old.filter((p) => p.id !== id),
+      );
+    },
+    onSettled: () => {
+      invalidateQueries(queryKeys.programs.all);
+    },
+  });
+}
+
 export function useProgramParticipants(programId: string) {
   return useApiQuery(queryKeys.programs.participants(programId), () =>
     ProgramService.getProgramParticipants(programId),

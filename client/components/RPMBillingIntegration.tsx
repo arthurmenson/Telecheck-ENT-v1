@@ -1406,7 +1406,7 @@ export function RPMBillingIntegration() {
   );
 }
 
-function Label({
+function CustomLabel({
   children,
   className,
   htmlFor,
