@@ -61,10 +61,15 @@ function expressPlugin(): Plugin {
           expressApp(req, res, next);
         } else {
           // If Express app isn't ready yet, return a temporary response
-          res.status(503).json({
-            error: "Server is still initializing, please try again in a moment",
-            code: "SERVER_INITIALIZING",
-          });
+          res.statusCode = 503;
+          res.setHeader("Content-Type", "application/json");
+          res.end(
+            JSON.stringify({
+              error:
+                "Server is still initializing, please try again in a moment",
+              code: "SERVER_INITIALIZING",
+            }),
+          );
         }
       });
 
