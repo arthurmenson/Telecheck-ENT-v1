@@ -714,7 +714,9 @@ export function OrderManager({ isOpen = true, onClose }: OrderManagerProps) {
               <PopoverContent className="w-auto p-0" align="end">
                 <Calendar
                   mode="range"
-                  selected={dateRange}
+                  selected={
+                    dateRange.from && dateRange.to ? dateRange : undefined
+                  }
                   onSelect={setDateRange}
                 />
               </PopoverContent>
